@@ -1,4 +1,4 @@
-using BlogApp.Concrete.EfCore;
+using BlogApp.Data.Concrete.EfCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,8 @@ builder.Services.AddDbContext<BlogContext>(options =>
 });
 
 var app = builder.Build();
+
+SeedData.TestVerileriniDoldur(app);
 
 app.MapGet("/", () => "Hello World!");
 
