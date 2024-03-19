@@ -1,7 +1,10 @@
+using BlogApp.Data.Abstract;
 using BlogApp.Data.Concrete.EfCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews(); //Controllers ve Views'leri eklemek için
 
 builder.Services.AddDbContext<BlogContext>(options =>
 {
@@ -12,10 +15,14 @@ builder.Services.AddDbContext<BlogContext>(options =>
     options.UseMySql(connectionString, version);
 });
 
+builder.Services.AddScoped<IPostRepository, EfPostRepository>(); //IPostRepository ve EfPostRepository arasýnda baðlantý kurmak için injection yapýlýr.
+//Her IPostRepository isteði geldiðinde EfPostRepository kullanýlacak.
+
 var app = builder.Build();
 
 SeedData.TestVerileriniDoldur(app);
 
-app.MapGet("/", () => "Hello World!");
+app.MapDefaultControllerRoute(); //Default Controller Route kullanmak için
 
+//app.MapGet("/", () => "Hello World!");
 app.Run();

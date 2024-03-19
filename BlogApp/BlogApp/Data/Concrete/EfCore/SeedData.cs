@@ -11,10 +11,7 @@ namespace BlogApp.Data.Concrete.EfCore
             var context = app.ApplicationServices.CreateScope().ServiceProvider.GetService<BlogContext>();
             if(context != null)
             {
-                if(context.Database.GetPendingMigrations().Any())
-                {
-                    context.Database.Migrate();
-                }
+                
                 if (!context.Tags.Any())
                 {
                     context.Tags.AddRange(
@@ -27,9 +24,9 @@ namespace BlogApp.Data.Concrete.EfCore
                     context.SaveChanges();
                 }
 
-                if(!context.USers.Any())
+                if(!context.Users.Any())
                 {
-                    context.USers.AddRange(
+                    context.Users.AddRange(
                         new User() { UserName = "hkmdr" },
                         new User() { UserName = "muhammed" }
                     );
@@ -66,6 +63,10 @@ namespace BlogApp.Data.Concrete.EfCore
                         }
                     );
                     context.SaveChanges();
+                }
+                if (context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
                 }
             }
         }

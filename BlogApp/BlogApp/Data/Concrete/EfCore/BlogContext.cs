@@ -9,7 +9,7 @@ namespace BlogApp.Data.Concrete.EfCore
         {
         }
         public DbSet<Post> Posts => Set<Post>();
-        public DbSet<User> USers => Set<User>();
+        public DbSet<User> Users => Set<User>();
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<Tag> Tags => Set<Tag>();
 

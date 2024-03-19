@@ -55,6 +55,9 @@ namespace BlogApp.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
@@ -94,12 +97,15 @@ namespace BlogApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("UserId");
 
-                    b.ToTable("USers");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PostTag", b =>
