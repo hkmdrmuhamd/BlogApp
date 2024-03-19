@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews(); //Controllers ve Views'leri eklemek için
+builder.Services.AddControllersWithViews(); //Controllers ve Views'leri eklemek iÃ§in
 
 builder.Services.AddDbContext<BlogContext>(options =>
 {
@@ -15,16 +15,17 @@ builder.Services.AddDbContext<BlogContext>(options =>
     options.UseMySql(connectionString, version);
 });
 
-builder.Services.AddScoped<IPostRepository, EfPostRepository>(); //IPostRepository ve EfPostRepository arasýnda baðlantý kurmak için injection yapýlýr.
-//Her IPostRepository isteði geldiðinde EfPostRepository kullanýlacak.
+builder.Services.AddScoped<IPostRepository, EfPostRepository>(); //IPostRepository ve EfPostRepository arasÄ±nda baÄŸlantÄ± kurmak iÃ§in injection yapÄ±lÄ±r.
+//Her IPostRepository isteÄŸi geldiÄŸinde EfPostRepository kullanÄ±lacak.
+builder.Services.AddScoped<ITagRepository, EfTagRepository>();
 
 var app = builder.Build();
 
-app.UseStaticFiles(); //wwwroot klasörüne eriþim saðlamak için
+app.UseStaticFiles(); //wwwroot klasÃ¶rÃ¼ne eriÅŸim saÄŸlamak iÃ§in
 
 SeedData.TestVerileriniDoldur(app);
 
-app.MapDefaultControllerRoute(); //Default Controller Route kullanmak için
+app.MapDefaultControllerRoute(); //Default Controller Route kullanmak iÃ§in
 
 //app.MapGet("/", () => "Hello World!");
 app.Run();
