@@ -20,6 +20,8 @@ builder.Services.AddScoped<IPostRepository, EfPostRepository>(); //IPostReposito
 
 var app = builder.Build();
 
+app.UseStaticFiles(); //wwwroot klasörüne eriþim saðlamak için
+
 SeedData.TestVerileriniDoldur(app);
 
 app.MapDefaultControllerRoute(); //Default Controller Route kullanmak için
