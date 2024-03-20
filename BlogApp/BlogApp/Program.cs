@@ -25,7 +25,22 @@ app.UseStaticFiles(); //wwwroot klasörüne erişim sağlamak için
 
 SeedData.TestVerileriniDoldur(app);
 
-app.MapDefaultControllerRoute(); //Default Controller Route kullanmak için
+app.MapControllerRoute(
+    name: "post_details",
+    pattern: "posts/{url}",
+    defaults: new { controller = "Post", action = "Details" }
+);
+
+app.MapControllerRoute(
+    name: "posts_by_tag",
+    pattern: "posts/tag/{tag}",
+    defaults: new { controller = "Post", action = "Index" }
+);
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 //app.MapGet("/", () => "Hello World!");
 app.Run();
