@@ -19,6 +19,7 @@ namespace BlogApp.Controllers
 
         public async Task<IActionResult> Index(string tag)
         {
+            var claims = User.Claims; // Kullanıcı bilgilerini almak için kullandık.
             var posts = _postRepository.Posts;
             if (!string.IsNullOrEmpty(tag))
             {
@@ -49,7 +50,8 @@ namespace BlogApp.Controllers
             };
             _commentRepository.CreateComment(entity);
 
-            return Json(new {
+            return Json(new
+            {
                 UserName,
                 Text,
                 entity.PublishedOn,
