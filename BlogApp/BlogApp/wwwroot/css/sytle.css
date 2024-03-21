@@ -5,3 +5,8 @@
 a {
     text-decoration: none;
 }
+
+.avatar {
+    width: 4rem;
+    height: 4rem;
+}

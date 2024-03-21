@@ -25,7 +25,13 @@ namespace BlogApp.Controllers
         }
         public async Task<IActionResult> Details(string url)
         {
-            return View(await _postRepository.Posts.Include(x => x.Tags).FirstOrDefaultAsync(p => p.Url == url));
+            return View(await _postRepository
+            .Posts
+            .Include(x => x.Tags)
+            .Include(x => x.Comments)//Comments'e git
+            .ThenInclude(x => x.User)//orada ki user'a git
+            .FirstOrDefaultAsync(p => p.Url == url)
+            );
         }
     }
 }

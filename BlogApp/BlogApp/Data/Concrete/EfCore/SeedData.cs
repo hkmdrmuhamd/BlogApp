@@ -27,8 +27,8 @@ namespace BlogApp.Data.Concrete.EfCore
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(
-                        new User() { UserName = "hkmdr" },
-                        new User() { UserName = "muhammed" }
+                        new User() { UserName = "hkmdr", Image = "p1.jpg" },
+                        new User() { UserName = "muhammed", Image = "p2.jpg" }
                     );
                     context.SaveChanges();
                 }
@@ -45,6 +45,11 @@ namespace BlogApp.Data.Concrete.EfCore
                             Tags = context.Tags.Take(3).ToList(),
                             Image = "1.jpg",
                             UserId = 1,
+                            Comments = new List<Comment>
+                            {
+                                new Comment{ Text = "Çok güzel bir ders olmuş", PublishedOn = DateTime.Now.AddHours(-10), UserId = 1 },
+                                new Comment{ Text = "Asp.Net öğrenmek istiyorsanız çok faydalı olacak bir kurs", PublishedOn = DateTime.Now.AddHours(-5), UserId = 2 }
+                            }
                         },
                         new Post()
                         {
@@ -67,27 +72,32 @@ namespace BlogApp.Data.Concrete.EfCore
                             Tags = context.Tags.Take(4).ToList(),
                             Image = "3.jpg",
                             UserId = 2,
+                            Comments = new List<Comment>
+                            {
+                                new Comment{ Text = "Spring Boot ile backend kodlamak isteyenler için gayet yeterli bir kurs", PublishedOn = new DateTime(), UserId = 1 },
+                                new Comment{ Text = "Güzeldi", PublishedOn = DateTime.Now.AddHours(-8), UserId = 1 }
+                            }
                         },
                         new Post()
                         {
                             Title = "Laravel",
-                            Content = "Laravel Boot dersleri",
+                            Content = "Laravel dersleri",
                             Url = "laravel",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-20),
                             Tags = context.Tags.Take(2).ToList(),
-                            Image = "3.jpg",
+                            Image = "4.jpg",
                             UserId = 2,
                         },
                         new Post()
                         {
                             Title = "Django",
-                            Content = "Django Boot dersleri",
+                            Content = "Django dersleri",
                             Url = "django",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-30),
                             Tags = context.Tags.Take(3).ToList(),
-                            Image = "3.jpg",
+                            Image = "5.jpg",
                             UserId = 2,
                         }
                     );
