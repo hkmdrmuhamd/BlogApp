@@ -18,6 +18,7 @@ builder.Services.AddDbContext<BlogContext>(options =>
 builder.Services.AddScoped<IPostRepository, EfPostRepository>(); //IPostRepository ve EfPostRepository arasında bağlantı kurmak için injection yapılır.
 //Her IPostRepository isteği geldiğinde EfPostRepository kullanılacak.
 builder.Services.AddScoped<ITagRepository, EfTagRepository>();
+builder.Services.AddScoped<ICommentRepository, EfCommentRepository>();
 
 var app = builder.Build();
 
