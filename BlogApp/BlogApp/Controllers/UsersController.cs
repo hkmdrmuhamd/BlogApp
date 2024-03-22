@@ -42,6 +42,7 @@ namespace BlogApp.Controllers
                     userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())); //Kullanıcı id'sini tutmak için
                     userClaims.Add(new Claim(ClaimTypes.Name, user.UserName ?? "")); //Kullanıcı userName'ini tutmak için
                     userClaims.Add(new Claim(ClaimTypes.GivenName, user.Name ?? "")); //Adını tutmak için
+                    userClaims.Add(new Claim(ClaimTypes.UserData, user.Image ?? "")); //Resmini tutmak için
 
                     if (user.Email == "info@mkh.com")
                     {

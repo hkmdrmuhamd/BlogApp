@@ -20,7 +20,7 @@
                 </div>
                 <div class="card-body">
                     <div id="comments">
-                        @foreach(var comment in Model.Comments)
+                        @foreach (var comment in Model.Comments)
                         {
                             <div class="my-4 d-flex">
                                 <img src="~/img/@comment.User.Image" alt="" class="avatar rounded-circle float-start me-3">
@@ -34,24 +34,30 @@
                             </div>
                         }
                     </div>
-                    <hr class="my-4">
-                    <div>
-                        <h4 class="mb-3">Yorum Yap</h4>
-                        <form action="/post/AddComment" method="post">
-                            <input type="hidden" id="PostId" name="PostId" value="@Model.PostId" />
-                            <div class="mb-3">
-                                <label for="UserName" class="form-label">Kullanıcı Adı</label>
-                                <input type="text" class="form-control" id="UserName" name="UserName" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="Text" class="form-label">Yorum</label>
-                                <textarea type="text" class="form-control" id="Text" rows="3" name="Text"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <button id="btnYorumKayit" type="submit" class="btn btn-primary">Kaydet</button>
-                            </div>
-                        </form>
-                    </div>
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <hr class="my-4">
+                        <div>
+                            <h4 class="mb-3">Yorum Yap</h4>
+                            <form action="/post/AddComment" method="post">
+                                <input type="hidden" id="PostId" name="PostId" value="@Model.PostId" />
+
+                                <div class="mb-3">
+                                    <label for="Text" class="form-label">Yorum</label>
+                                    <textarea type="text" class="form-control" id="Text" rows="3" name="Text"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <button id="btnYorumKayit" type="submit" class="btn btn-primary">Kaydet</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            Yorum yapabilmek için <a href="/users/login">giriş yapın</a> veya <a href="#">kayıt olun.</a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
@@ -78,20 +84,20 @@
                         Text: $("#Text").val()
                     },
                     success: function (data) {
-                        // console.log(data);
+                        console.log(data);
                         var date = new Date(data.publishedOn);
                         $("#comments").append(`
-                            <div class="my-4 d-flex">
-                                <img src="/img/${data.image}" alt="" class="avatar rounded-circle float-start me-3">
-                                <div>
-                                    <div class="mb-2 d-flex">
-                                        <h6 class="me-2">${data.userName}</h6>
-                                        <small>${date.toLocaleDateString()}</small>
-                                    </div>
-                                    <p>${data.text}</p>
-                                </div>
-                            </div>
-                        `);
+                                                        <div class="my-4 d-flex">
+                                                            <img src="/img/${data.avatar}" alt="" class="avatar rounded-circle float-start me-3">
+                                                            <div>
+                                                                <div class="mb-2 d-flex">
+                                                                    <h6 class="me-2">${data.userName}</h6>
+                                                                    <small>${date.toLocaleDateString()}</small>
+                                                                </div>
+                                                                <p>${data.text}</p>
+                                                            </div>
+                                                        </div>
+                                                    `);
                         $("#UserName").val('');
                         $("#Text").val('');
 
