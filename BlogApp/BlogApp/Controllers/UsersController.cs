@@ -23,6 +23,10 @@ namespace BlogApp.Controllers
 
         public IActionResult Login()
         {
+            if (User.Identity!.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Post");
+            }
             return View();
         }
 
@@ -70,6 +74,12 @@ namespace BlogApp.Controllers
                 ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı");
             }
             return View(loginViewModel);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using BlogApp.Data.Concrete.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20240320085754_UpdateColumnTagColor")]
+    partial class UpdateColumnTagColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,9 +70,6 @@ namespace BlogApp.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -92,9 +92,6 @@ namespace BlogApp.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
                     b.HasKey("TagId");
 
                     b.ToTable("Tags");
@@ -106,16 +103,7 @@ namespace BlogApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Image")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Password")
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserName")

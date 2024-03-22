@@ -48,7 +48,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Users}/{action=Login}/{id?}"
+    pattern: "{controller=Post}/{action=Index}/{id?}"
 );
 
 //app.MapGet("/", () => "Hello World!");
