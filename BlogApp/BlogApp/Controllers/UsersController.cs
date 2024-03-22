@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using BlogApp.Data.Abstract;
+using BlogApp.Entity;
 using BlogApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.Controllers
 {
@@ -81,6 +77,64 @@ namespace BlogApp.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel, IFormFile imageFile)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userRepository.Users.FirstOrDefaultAsync(x => x.UserName == registerViewModel.UserName || x.Email == registerViewModel.Email);
+                if (user == null)
+                {
+                    if (imageFile != null)
+                    {
+                        var extension = Path.GetExtension(imageFile.FileName).ToLower();
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+
+                        if (!allowedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("", "Sadece jpg, jpeg ve png uzantılı doslayaları seçebilirsiniz.");
+                        }
+                        else
+                        {
+                            var randomFileName = $"{Guid.NewGuid().ToString()}{extension}";
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+
+                            using (var stream = new FileStream(path, FileMode.Create))
+                            {
+                                await imageFile.CopyToAsync(stream);
+                            }
+                            registerViewModel.Image = randomFileName;
+                            var newUser = new User
+                            {
+                                Name = registerViewModel.Name,
+                                UserName = registerViewModel.UserName,
+                                Email = registerViewModel.Email,
+                                Password = registerViewModel.Password,
+                                Image = registerViewModel.Image
+                            };
+                            _userRepository.CreateUser(newUser);
+
+                            return RedirectToAction("Login");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Lütfen bir resim seçiniz.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Kullanıcı adı veya email adresi kullanılmaktadır.");
+                }
+            }
+            return View(registerViewModel);
         }
     }
 }
