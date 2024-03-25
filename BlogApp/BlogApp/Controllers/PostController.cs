@@ -205,8 +205,11 @@ namespace BlogApp.Controllers
                         Description = postCreateViewModel.Description,
                         Url = postCreateViewModel.Url,
                         Image = postCreateViewModel.Image,
-                        IsActive = postCreateViewModel.IsActive
                     };
+                    if (User.FindFirstValue(ClaimTypes.Role) == "admin")
+                    {
+                        updatePost.IsActive = postCreateViewModel.IsActive;
+                    }
                     _postRepository.EditPost(updatePost);
                     return RedirectToAction("List");
                 }
