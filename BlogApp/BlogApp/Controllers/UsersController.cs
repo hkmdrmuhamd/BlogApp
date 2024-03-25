@@ -40,7 +40,7 @@ namespace BlogApp.Controllers
                     userClaims.Add(new Claim(ClaimTypes.GivenName, user.Name ?? "")); //Adını tutmak için
                     userClaims.Add(new Claim(ClaimTypes.UserData, user.Image ?? "")); //Resmini tutmak için
 
-                    if (user.Email == "info@mkh.com")
+                    if (user.Email == "info@mhk.com")
                     {
                         userClaims.Add(new Claim(ClaimTypes.Role, "admin")); //Kullanıcı admin ise admin rolünü ver
                     }
