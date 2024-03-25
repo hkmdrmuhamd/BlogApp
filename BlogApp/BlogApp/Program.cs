@@ -22,7 +22,11 @@ builder.Services.AddScoped<ITagRepository, EfTagRepository>();
 builder.Services.AddScoped<ICommentRepository, EfCommentRepository>();
 builder.Services.AddScoped<IUserRepository, EfUserRepository>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(); //Cookie tabanlı kimlik doğrulama eklemek için
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => //Cookie tabanlı kimlik doğrulama eklemek için
+{
+    options.LoginPath = "/Users/Login"; //Authorize olmamış kullanıcıları otomatik olarak yönlendirmek için
+
+});
 
 var app = builder.Build();
 

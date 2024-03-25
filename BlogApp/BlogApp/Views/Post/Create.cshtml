@@ -1,0 +1,38 @@
+@model PostCreateViewModel
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<form asp-controller="Post" asp-action="Create" method="post" enctype="multipart/form-data">
+    <div style="color: red" asp-validation-summary="All"></div>
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" placeholder="Post Başlığı" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <input asp-for="Description" class="form-control" placeholder="Post Açıklaması" />
+    </div>
+    <div>Resim</div>
+    <div class="input-group mb-3">
+        <input type="file" name="imageFile" id="imageFile" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Content" class="form-label"></label>
+        <textarea asp-for="Content" class="form-control" placeholder="Post İçeriği"></textarea>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Url" class="form-label"></label>
+        <input asp-for="Url" class="form-control" placeholder="Post Url Alanı" />
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.0.0/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#Content'
+        });
+    </script>
+}

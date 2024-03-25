@@ -3,6 +3,7 @@ using BlogApp.Data.Abstract;
 using BlogApp.Data.Concrete.EfCore;
 using BlogApp.Entity;
 using BlogApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -62,6 +63,59 @@ namespace BlogApp.Controllers
                 entity.PublishedOn,
                 avatar
             });
+        }
+
+        [Authorize] //Authorize olmamış bir kullanıcının bu sayfayı görüntülemeini engeller
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync(PostCreateViewModel postCreateViewModel, IFormFile imageFile)
+        {
+            if (ModelState.IsValid)
+            {
+                if (imageFile != null)
+                {
+                    var extension = Path.GetExtension(imageFile.FileName).ToLower();
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("", "Sadece jpg, jpeg ve png uzantılı doslayaları seçebilirsiniz.");
+                    }
+                    else
+                    {
+                        var randomFileName = $"{Guid.NewGuid().ToString()}{extension}";
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+                        postCreateViewModel.Image = randomFileName;
+                        var entity = new Post
+                        {
+                            Title = postCreateViewModel.Title,
+                            Content = postCreateViewModel.Content,
+                            Description = postCreateViewModel.Description,
+                            Url = postCreateViewModel.Url,
+                            PublishedOn = DateTime.Now,
+                            IsActive = false,
+                            Image = postCreateViewModel.Image,
+                            UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "")
+                        };
+                        _postRepository.CreatePost(entity);
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Lütfen bir resim seçiniz.");
+                }
+            }
+            return View(postCreateViewModel);
         }
     }
 }

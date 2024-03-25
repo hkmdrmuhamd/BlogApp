@@ -27,7 +27,7 @@ namespace BlogApp.Data.Concrete.EfCore
                 if (!context.Users.Any())
                 {
                     context.Users.AddRange(
-                        new User() { UserName = "hkmdr", Name = "Muhammed Hükümdar", Email="info@mhk.com", Password = "12345", Image = "p1.jpg" },
+                        new User() { UserName = "hkmdr", Name = "Muhammed Hükümdar", Email = "info@mhk.com", Password = "12345", Image = "p1.jpg" },
                         new User() { UserName = "mehmet", Name = "Mehmet Kaya", Email = "info@mehmet.com", Password = "123456", Image = "p2.jpg" }
                     );
                     context.SaveChanges();
@@ -39,6 +39,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         {
                             Title = "Asp.Net Core",
                             Content = "Asp.Net Core MVC dersleri",
+                            Description = "Asp.Net Core MVC dersleri hakkında detaylı bilgiler. ",
                             Url = "asp-net-core",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-10),
@@ -55,6 +56,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         {
                             Title = "Php Core",
                             Content = "Php Core dersleri",
+                            Description = "PHP hakkında detaylı bilgiler",
                             Url = "php-core",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-20),
@@ -66,6 +68,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         {
                             Title = "Spring Boot",
                             Content = "Spring Boot dersleri",
+                            Description = "Spring Boot dersleri hakkında detaylı bilgiler. ",
                             Url = "spring-boot",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-5),
@@ -82,6 +85,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         {
                             Title = "Laravel",
                             Content = "Laravel dersleri",
+                            Description = "Laravel dersleri hakkında detaylı bilgiler. ",
                             Url = "laravel",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-20),
@@ -93,6 +97,7 @@ namespace BlogApp.Data.Concrete.EfCore
                         {
                             Title = "Django",
                             Content = "Django dersleri",
+                            Description = "Django dersleri hakkında detaylı bilgiler. ",
                             Url = "django",
                             IsActive = true,
                             PublishedOn = DateTime.Now.AddDays(-30),
