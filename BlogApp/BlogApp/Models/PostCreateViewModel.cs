@@ -4,6 +4,7 @@ namespace BlogApp.Models
 {
     public class PostCreateViewModel
     {
+        public int PostId { get; set; }
         [Required(ErrorMessage = "Başlık alanı gereklidir.")]
         [Display(Name = "Başlık")]
         public string? Title { get; set; }
@@ -21,6 +22,8 @@ namespace BlogApp.Models
         public string? Url { get; set; }
 
         [Display(Name = "Resim")]
-        public string Image { get; set; } = string.Empty;
+        public string? Image { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

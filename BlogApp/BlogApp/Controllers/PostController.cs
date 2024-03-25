@@ -6,6 +6,7 @@ using BlogApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BlogApp.Controllers
 {
@@ -22,7 +23,7 @@ namespace BlogApp.Controllers
         public async Task<IActionResult> Index(string tag)
         {
             var claims = User.Claims; // Kullanıcı bilgilerini almak için kullandık.
-            var posts = _postRepository.Posts;
+            var posts = _postRepository.Posts.Where(x => x.IsActive);
             if (!string.IsNullOrEmpty(tag))
             {
                 posts = posts.Where(x => x.Tags.Any(t => t.Url == tag));
@@ -132,6 +133,85 @@ namespace BlogApp.Controllers
                 posts = posts.Where(x => x.UserId == userId);
             }
             return View(await posts.ToListAsync());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "");
+            var role = User.FindFirstValue(ClaimTypes.Role);
+
+            var post = await _postRepository.Posts.FirstOrDefaultAsync(x => x.PostId == id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return View(new PostCreateViewModel
+                {
+                    PostId = post.PostId,
+                    Title = post.Title,
+                    Content = post.Content,
+                    Description = post.Description,
+                    Url = post.Url,
+                    Image = post.Image,
+                    IsActive = post.IsActive
+                });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(PostCreateViewModel postCreateViewModel, IFormFile imageFile)
+        {
+            var post = await _postRepository.Posts.FirstOrDefaultAsync(x => x.PostId == postCreateViewModel.PostId);
+            if (post != null)
+            {
+                if (post.UserId == int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "") || User.FindFirstValue(ClaimTypes.Role) == "admin")
+                {
+                    if (imageFile != null)
+                    {
+                        var extension = Path.GetExtension(imageFile.FileName).ToLower();
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                        if (!allowedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("", "Sadece jpg, jpeg ve png uzantılı doslayaları seçebilirsiniz.");
+                        }
+                        else
+                        {
+                            var randomFileName = $"{Guid.NewGuid().ToString()}{extension}";
+                            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", randomFileName);
+                            using (var stream = new FileStream(path, FileMode.Create))
+                            {
+                                await imageFile.CopyToAsync(stream);
+                            }
+                            postCreateViewModel.Image = randomFileName;
+                        }
+                    }
+                    else
+                    {
+                        var existingPost = await _postRepository.Posts.FirstOrDefaultAsync(x => x.PostId == postCreateViewModel.PostId);
+                        if (existingPost != null)
+                        {
+                            postCreateViewModel.Image = existingPost.Image;
+                        }
+                    }
+                    var updatePost = new Post
+                    {
+                        PostId = postCreateViewModel.PostId,
+                        Title = postCreateViewModel.Title,
+                        Content = postCreateViewModel.Content,
+                        Description = postCreateViewModel.Description,
+                        Url = postCreateViewModel.Url,
+                        Image = postCreateViewModel.Image,
+                        IsActive = postCreateViewModel.IsActive
+                    };
+                    _postRepository.EditPost(updatePost);
+                    return RedirectToAction("List");
+                }
+            }
+            return View(postCreateViewModel);
         }
     }
 }
