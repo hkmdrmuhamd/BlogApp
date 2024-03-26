@@ -14,10 +14,12 @@ namespace BlogApp.Controllers
     {
         private IPostRepository _postRepository;
         private ICommentRepository _commentRepository;
-        public PostController(IPostRepository postRepository, ICommentRepository commentRepository)
+        private ITagRepository _tagRepository;
+        public PostController(IPostRepository postRepository, ICommentRepository commentRepository, ITagRepository tagRepository)
         {
             _postRepository = postRepository;
             _commentRepository = commentRepository;
+            _tagRepository = tagRepository;
         }
 
         public async Task<IActionResult> Index(string tag)
@@ -142,7 +144,8 @@ namespace BlogApp.Controllers
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "");
             var role = User.FindFirstValue(ClaimTypes.Role);
 
-            var post = await _postRepository.Posts.FirstOrDefaultAsync(x => x.PostId == id);
+            var post = await _postRepository.Posts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.PostId == id);
+            ViewBag.Tags = _tagRepository.Tags.ToList();
 
             if (post == null)
             {
@@ -158,13 +161,16 @@ namespace BlogApp.Controllers
                     Description = post.Description,
                     Url = post.Url,
                     Image = post.Image,
-                    IsActive = post.IsActive
+                    IsActive = post.IsActive,
+                    Tags = post.Tags
                 });
             }
+
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Edit(PostCreateViewModel postCreateViewModel, IFormFile imageFile)
+        public async Task<IActionResult> Edit(PostCreateViewModel postCreateViewModel, IFormFile imageFile, int[] tagIds)
         {
             var post = await _postRepository.Posts.FirstOrDefaultAsync(x => x.PostId == postCreateViewModel.PostId);
             if (post != null)
@@ -211,10 +217,12 @@ namespace BlogApp.Controllers
                     {
                         updatePost.IsActive = postCreateViewModel.IsActive;
                     }
-                    _postRepository.EditPost(updatePost);
+
+                    _postRepository.EditPost(updatePost, tagIds);
                     return RedirectToAction("List");
                 }
             }
+            ViewBag.Tags = _tagRepository.Tags.ToList();
             return View(postCreateViewModel);
         }
     }
